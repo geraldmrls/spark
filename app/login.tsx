@@ -109,10 +109,12 @@ export default function Login() {
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>EMAIL ADDRESS</Text>
           <TextInput
+            value={email}
             keyboardType="email-address"
             placeholder="name@example.com"
             autoCapitalize="none"
             autoCorrect={false}
+            onChangeText={(text) => setEmail(text)}
             style={styles.input}
           />
         </View>
@@ -125,17 +127,26 @@ export default function Login() {
             </Pressable>
           </View>
           <TextInput
+            value={password}
             placeholder="••••••••"
             secureTextEntry
             autoCapitalize="none"
             autoCorrect={false}
             style={styles.input}
+            onChangeText={(text) => setPassword(text)}
           />
         </View>
         {/* Log In Button */}
         <Pressable style={styles.loginButton} onPress={handleLogin}>
           <Text style={styles.loginButtonText}>Log In</Text>
         </Pressable>
+
+        {/* Error message */}
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
+        {/* Success message */}
+        {message ? <Text style={styles.messageText}>{message}</Text> : null}
+
         {/* Divider */}
         <View style={styles.dividerRow}>
           <View style={styles.dividerLine} />
@@ -286,5 +297,15 @@ const styles = StyleSheet.create({
   loadingText: {
     color: "#9ca3af",
     fontSize: 14,
+  },
+  errorText: {
+    color: "#f87171",
+    fontSize: 13,
+    marginBottom: 12,
+  },
+  messageText: {
+    color: "#22c55e",
+    fontSize: 13,
+    marginBottom: 12,
   },
 });

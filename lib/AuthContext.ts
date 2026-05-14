@@ -8,6 +8,7 @@ type AuthContextType = {
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined,
 );
+
 export function useAuthContext() {
   const context = useContext(AuthContext);
   if (context === undefined) {
