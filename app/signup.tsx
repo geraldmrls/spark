@@ -1,11 +1,57 @@
 import { Link } from "expo-router";
+import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import GoogleIcon from "../assets/svg/google.svg";
 import SparkLogo from "../assets/svg/spark.svg";
 
+// local variables and hooks
+import { supabase } from "@/lib/supabase";
+
 export default function Signup() {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [fullName, setFullName] = useState<string>("");
+
+  // handle signup
+  async function handleSignup() {
+    if (!fullName || !email || !password) {
+      setError("Please fill in all fields");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+        },
+      },
+    });
+    if (error) {
+      setError(error.message);
+    } else {
+      setMessage("check your email to confirm your account");
+    }
+    setLoading(false);
+  }
+
+  // when loading show
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
@@ -23,6 +69,8 @@ export default function Signup() {
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Full Name</Text>
           <TextInput
+            value={fullName}
+            onChangeText={(text) => setFullName(text)}
             placeholder="Enter your full name"
             autoCorrect={false}
             style={styles.input}
@@ -33,6 +81,8 @@ export default function Signup() {
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Email Address</Text>
           <TextInput
+            value={email}
+            onChangeText={(text) => setEmail(text)}
             keyboardType="email-address"
             placeholder="name@example.com"
             autoCapitalize="none"
@@ -45,6 +95,8 @@ export default function Signup() {
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Password</Text>
           <TextInput
+            value={password}
+            onChangeText={(text) => setPassword(text)}
             placeholder="Min. 8 characters"
             secureTextEntry
             autoCapitalize="none"
@@ -54,10 +106,13 @@ export default function Signup() {
         </View>
 
         {/* Create Account Button */}
-        <Pressable style={styles.createButton}>
+        <Pressable style={styles.createButton} onPress={() => handleSignup()}>
           <Text style={styles.createButtonText}>Create Account</Text>
         </Pressable>
 
+        {/* show messages - errors */}
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+        {message ? <Text style={styles.messageText}>{message}</Text> : null}
         {/* Divider */}
         <View style={styles.dividerRow}>
           <View style={styles.dividerLine} />
@@ -193,5 +248,25 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#7f5931",
     fontWeight: "bold",
+  },
+  errorText: {
+    color: "#f87171",
+    fontSize: 13,
+    marginBottom: 12,
+  },
+  messageText: {
+    color: "#22c55e",
+    fontSize: 13,
+    marginBottom: 12,
+  },
+  loadingContainer: {
+    flex: 1,
+    backgroundColor: "#f3f4f6",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    color: "#9ca3af",
+    fontSize: 14,
   },
 });

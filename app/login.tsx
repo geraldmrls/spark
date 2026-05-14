@@ -20,7 +20,7 @@ export default function Login() {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [message, setMessage] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     // check if user is already logged in
@@ -47,11 +47,17 @@ export default function Login() {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [setIsLogIn]);
 
   // handle login
   async function handleLogin() {
+    if (!email || !password) {
+      setError("Please fill in all fields");
+      return;
+    }
+
     setError("");
+    setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -61,19 +67,7 @@ export default function Login() {
     } else {
       setIsLogIn(true);
     }
-    setLoading(false);
-  }
 
-  // handle signup
-  async function handleSignup() {
-    setLoading(true);
-    setError("");
-    const { error } = await supabase.auth.signUp({ email, password });
-    if (error) {
-      setError(error.message);
-    } else {
-      setMessage("check your email to confirm your account");
-    }
     setLoading(false);
   }
 

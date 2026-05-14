@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 export default function IsLogIn() {
   return (
     <View style={styles.loadingContainer}>
-      <Text style={styles.loadingText}>Checking authentication...</Text>
+      <Text style={styles.loadingText}>Welcome to spark</Text>
     </View>
   );
 }
