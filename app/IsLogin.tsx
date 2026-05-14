@@ -1,11 +1,32 @@
-import { StyleSheet, Text, View } from "react-native";
+import { useAuthContext } from "@/lib/AuthContext";
+import { router } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+
+// local variables hooks
+import { supabase } from "@/lib/supabase";
 
 export default function IsLogIn() {
-  return (
-    <View style={styles.loadingContainer}>
-      <Text style={styles.loadingText}>Welcome to spark</Text>
-    </View>
-  );
+  const { isLogIn, setIsLogIn } = useAuthContext();
+
+  // handle logout
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    setIsLogIn(false);
+    router.replace("/Login");
+  }
+
+  if (isLogIn) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>Welcome to spark</Text>
+        <Pressable onPress={() => handleLogout()}>
+          <Text>Log out</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
+  return null;
 }
 
 const styles = StyleSheet.create({

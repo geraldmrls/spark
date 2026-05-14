@@ -1,8 +1,8 @@
 // hooks
+import { Link, router } from "expo-router";
 import { useEffect, useState } from "react";
 
 // react native
-import { Link } from "expo-router";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -15,12 +15,12 @@ import GoogleIcon from "../assets/svg/google.svg";
 import SparkLogo from "../assets/svg/spark.svg";
 
 export default function Login() {
-  const { isLogIn, setIsLogIn } = useAuthContext();
+  const { setIsLogIn } = useAuthContext();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const [message, setMessage] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [message] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     // check if user is already logged in
@@ -28,7 +28,10 @@ export default function Login() {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      if (session) setIsLogIn(true);
+      if (session) {
+        setIsLogIn(true);
+        router.replace("/IsLogin");
+      }
       setLoading(false);
     };
     checkSession();
@@ -66,17 +69,10 @@ export default function Login() {
       setError(error.message);
     } else {
       setIsLogIn(true);
+      router.replace("/IsLogin");
     }
 
     setLoading(false);
-  }
-
-  // handle logout
-  async function handleLogout() {
-    await supabase.auth.signOut();
-    setIsLogIn(false);
-    setEmail("");
-    setPassword("");
   }
 
   // when loading show
