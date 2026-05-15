@@ -9,18 +9,37 @@ import SparkLogo from "../assets/svg/spark.svg";
 // local variables and hooks
 import { supabase } from "@/lib/supabase";
 
+// svg
+import EyeClosed from "../assets/svg/eye-closed.svg";
+import EyeOpen from "../assets/svg/eye-open.svg";
+
 export default function Signup() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confPassword, setConfPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [fullName, setFullName] = useState<string>("");
 
+  // eye states
+  const [eyePass, setEyePass] = useState<string>("closed");
+  const [eyeConfPass, setEyeConfPass] = useState<string>("closed");
+
   // handle signup
   async function handleSignup() {
     if (!fullName || !email || !password) {
       setError("Please fill in all fields");
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters");
+      return;
+    }
+
+    if (password !== confPassword) {
+      setError("Passwords do not match");
       return;
     }
 
@@ -93,16 +112,55 @@ export default function Signup() {
 
         {/* Password */}
         <View style={styles.inputGroup}>
+          {/* password validation */}
           <Text style={styles.inputLabel}>Password</Text>
           <TextInput
             value={password}
             onChangeText={(text) => setPassword(text)}
             placeholder="Min. 8 characters"
-            secureTextEntry
+            secureTextEntry={eyePass === "closed"}
             autoCapitalize="none"
             autoCorrect={false}
             style={styles.input}
           />
+          <Pressable
+            style={styles.eyePass}
+            onPress={() => {
+              setEyePass(eyePass === "open" ? "closed" : "open");
+            }}
+          >
+            {eyePass === "open" ? (
+              <EyeOpen width={23} height={23} />
+            ) : (
+              <EyeClosed width={23} height={23} />
+            )}
+          </Pressable>
+        </View>
+
+        {/* Confirm password */}
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>Confirm password</Text>
+          <TextInput
+            value={confPassword}
+            onChangeText={(text) => setConfPassword(text)}
+            placeholder="Min. 8 characters"
+            secureTextEntry={eyeConfPass === "closed"}
+            autoCapitalize="none"
+            autoCorrect={false}
+            style={styles.input}
+          />
+          <Pressable
+            style={styles.eyePass}
+            onPress={() => {
+              setEyeConfPass(eyeConfPass === "open" ? "closed" : "open");
+            }}
+          >
+            {eyeConfPass === "open" ? (
+              <EyeOpen width={23} height={23} />
+            ) : (
+              <EyeClosed width={23} height={23} />
+            )}
+          </Pressable>
         </View>
 
         {/* Create Account Button */}
@@ -139,6 +197,15 @@ export default function Signup() {
 }
 
 const styles = StyleSheet.create({
+  passwordValidation: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  eyePass: {
+    position: "absolute",
+    right: 10,
+    top: 38,
+  },
   safeAreaView: {
     flex: 1,
     backgroundColor: "#eef0f7",
@@ -172,6 +239,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   inputLabel: {
+    marginRight: 5,
     fontSize: 13,
     color: "#333",
     marginBottom: 6,
