@@ -35,7 +35,7 @@ export default function Login() {
       } = await supabase.auth.getSession();
       if (session) {
         setIsLogIn(true);
-        router.replace("/IsLogin");
+        router.replace("/(tabs)/Discover");
       }
       setLoading(false);
     };
@@ -74,7 +74,7 @@ export default function Login() {
       setError(error.message);
     } else {
       setIsLogIn(true);
-      router.replace("/IsLogin");
+      router.replace("/(tabs)/Discover");
     }
 
     setLoading(false);

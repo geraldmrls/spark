@@ -5,28 +5,23 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 // local variables hooks
 import { supabase } from "@/lib/supabase";
 
-export default function IsLogIn() {
-  const { isLogIn, setIsLogIn } = useAuthContext();
+export default function Profile() {
+  const { setIsLogIn } = useAuthContext();
 
-  // handle logout
   async function handleLogout() {
     await supabase.auth.signOut();
     setIsLogIn(false);
     router.replace("/Login");
   }
 
-  if (isLogIn) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Welcome to spark</Text>
-        <Pressable onPress={() => handleLogout()}>
-          <Text>Log out</Text>
-        </Pressable>
-      </View>
-    );
-  }
-
-  return null;
+  return (
+    <View style={styles.loadingContainer}>
+      <Text style={styles.loadingText}>Welcome to Spark</Text>
+      <Pressable onPress={handleLogout}>
+        <Text>Log out</Text>
+      </Pressable>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
