@@ -11,6 +11,8 @@ import { useAuthContext } from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
 
 // svg
+import EyeClosed from "../assets/svg/eye-closed.svg";
+import EyeOpen from "../assets/svg/eye-open.svg";
 import GoogleIcon from "../assets/svg/google.svg";
 import SparkLogo from "../assets/svg/spark.svg";
 
@@ -21,6 +23,9 @@ export default function Login() {
   const [error, setError] = useState<string>("");
   const [message] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
+
+  // eye icon state
+  const [eye, setEye] = useState<string>("closed");
 
   useEffect(() => {
     // check if user is already logged in
@@ -116,15 +121,29 @@ export default function Login() {
               <Text style={styles.forgotPassword}>Forgot Password?</Text>
             </Pressable>
           </View>
-          <TextInput
-            value={password}
-            placeholder="••••••••"
-            secureTextEntry
-            autoCapitalize="none"
-            autoCorrect={false}
-            style={styles.input}
-            onChangeText={(text) => setPassword(text)}
-          />
+
+          <View>
+            <TextInput
+              value={password}
+              placeholder="••••••••"
+              secureTextEntry={eye === "closed"}
+              autoCapitalize="none"
+              autoCorrect={false}
+              style={styles.input}
+              onChangeText={(text) => setPassword(text)}
+            />
+
+            <Pressable
+              style={styles.eye}
+              onPress={() => setEye(eye === "open" ? "closed" : "open")}
+            >
+              {eye === "open" ? (
+                <EyeOpen width={23} height={23} />
+              ) : (
+                <EyeClosed width={23} height={23} />
+              )}
+            </Pressable>
+          </View>
         </View>
         {/* Log In Button */}
         <Pressable style={styles.loginButton} onPress={handleLogin}>
@@ -297,5 +316,10 @@ const styles = StyleSheet.create({
     color: "#22c55e",
     fontSize: 13,
     marginBottom: 12,
+  },
+  eye: {
+    position: "absolute",
+    right: 10,
+    top: 15,
   },
 });
