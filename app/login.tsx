@@ -1,6 +1,6 @@
 // hooks
 import { Link, router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // react native
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
@@ -22,40 +22,10 @@ export default function Login() {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [message] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // eye icon state
   const [eye, setEye] = useState<string>("closed");
-
-  useEffect(() => {
-    // check if user is already logged in
-    const checkSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (session) {
-        setIsLogIn(true);
-        router.replace("/(tabs)/Discover");
-      }
-      setLoading(false);
-    };
-    checkSession();
-
-    //listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        setIsLogIn(true);
-      } else {
-        setIsLogIn(false);
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [setIsLogIn]);
 
   // handle login
   async function handleLogin() {
