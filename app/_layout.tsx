@@ -1,6 +1,6 @@
 import { AuthContext } from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
-// import * as NavigationBar from "expo-navigation-bar";
+import * as NavigationBar from "expo-navigation-bar";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
@@ -9,12 +9,14 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RootLayout() {
   const [isLogIn, setIsLogIn] = useState<boolean>(false);
+  const [isOnboarding, setIsOnboarding] = useState<boolean>(false);
+
   const [loading, setIsLoading] = useState<boolean>(true);
 
-  // useEffect(() => {
-  //   NavigationBar.setBackgroundColorAsync("#eef0f7");
-  //   NavigationBar.setButtonStyleAsync("dark");
-  // }, []);
+  useEffect(() => {
+    NavigationBar.setBackgroundColorAsync("#eef0f7");
+    NavigationBar.setButtonStyleAsync("dark");
+  }, []);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -59,7 +61,9 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <AuthContext.Provider value={{ isLogIn, setIsLogIn }}>
+      <AuthContext.Provider
+        value={{ isLogIn, setIsLogIn, isOnboarding, setIsOnboarding }}
+      >
         <StatusBar style="dark" backgroundColor="#eef0f7" />
 
         <Stack screenOptions={{ headerShown: false }}>

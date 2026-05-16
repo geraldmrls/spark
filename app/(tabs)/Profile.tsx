@@ -1,6 +1,7 @@
 import { useAuthContext } from "@/lib/AuthContext";
 import { router } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // local variables hooks
 import { supabase } from "@/lib/supabase";
@@ -15,12 +16,12 @@ export default function Profile() {
   }
 
   return (
-    <View style={styles.loadingContainer}>
+    <SafeAreaView style={styles.loadingContainer}>
       <Text style={styles.loadingText}>Welcome to Spark</Text>
       <Pressable onPress={handleLogout}>
         <Text>Log out</Text>
       </Pressable>
-    </View>
+    </SafeAreaView>
   );
 }
 
